@@ -45,6 +45,31 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
+            BlocConsumer<CounterBloc, CounterState>(
+              builder : (context,state){
+                return Text(state.toString());
+              },
+              listenWhen: (previous ,current) => true,
+              listener: (context, state) {
+                if (state.counter >= 5) {
+                  final snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      title: 'Working!',
+                      message: 'This is an example Bloc Listener',
+                      contentType: ContentType.success,
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
+                }
+              },
+            ),
+
             BlocListener<CounterBloc, CounterState>(
               listenWhen: (previous ,current) => true,
               listener: (context, state) {
