@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:simple_counter/counter_event.dart';
 import 'package:simple_counter/counter_state.dart';
 import 'package:simple_counter/counter_bloc.dart';
@@ -43,6 +44,30 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            BlocListener<CounterBloc, CounterState>(
+              listenWhen: (previous ,current) => true,
+              listener: (context, state) {
+                if (state.counter >= 5) {
+                  final snackBar = SnackBar(
+                    elevation: 0,
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.transparent,
+                    content: AwesomeSnackbarContent(
+                      title: 'Working!',
+                      message: 'This is an example Bloc Listener',
+                      contentType: ContentType.success,
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
+                }
+              },
+              child: const Text("Bloc Listener"),
+            ),
+
             BlocBuilder<CounterBloc, CounterState>(
               buildWhen: (previous, current) {
                 print(previous);
@@ -50,13 +75,14 @@ class MyHomePage extends StatelessWidget {
                 return true;
               },
               builder: (context, state) {
-
                 return Text(
                   '${state.counter}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 );
               },
             ),
+
+
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
