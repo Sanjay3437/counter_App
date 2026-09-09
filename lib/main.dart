@@ -4,6 +4,8 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:simple_counter/counter_event.dart';
 import 'package:simple_counter/counter_state.dart';
 import 'package:simple_counter/counter_bloc.dart';
+import 'package:simple_counter/color_bloc/color_bloc.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CounterBloc>(
-      create: (context) => CounterBloc(),
+    return MultiBlocProvider(providers: [
+      BlocProvider<CounterBloc>(
+        create: (context) => CounterBloc(),
+      ),
+      BlocProvider<ColorBloc>(
+        create: (context) => ColorBloc(),
+      ),
+    ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -44,6 +52,19 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            
+            BlocSelector<CounterBloc, CounterState, bool> (
+                selector: (state) => state.counter >= 3 ? true:false,
+                builder: (context,state) {
+                  return Center(
+                    child : Container (
+                      color : state ? Colors.green : Colors.red,
+                      width : 200,
+                      height : 200,
+                    ),
+                  );
+                }
+            ),
 
             BlocConsumer<CounterBloc, CounterState>(
               builder : (context,state){
